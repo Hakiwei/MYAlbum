@@ -67,13 +67,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 // 画廊内容生成
 const galleryData =[
-    { title:"test1", artist:"one", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/sunOff.jpg"},
-    { title:"test2", artist:"two", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/buildingAndsunOff.jpg"},
-    { title:"test4", artist:"5", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/seapone.jpg"},
-    { title:"test3", artist:"4", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/blueSky.jpg"},
-    { title:"test5", artist:"6", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/whiteGlass.jpg"},
-    { title:"test6", artist:"7", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/animial.jpg"},
-    { title:"test7", artist:"8", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakimi.jpg"}
+    { title:"小艇", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/sunOff.jpg"},
+    { title:"城市", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/buildingAndsunOff.jpg"},
+    { title:"海岸", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/seapone.jpg"},
+    { title:"蓝天", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/blueSky.jpg"},
+    { title:"灌木", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/grass.JPG"},
+    { title:"海水", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/whiteGlass.jpg"},
+    { title:"森林", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/forest.png"},
+    { title:"蜥蜴", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/animial.jpg"},
+    { title:"行人", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/People.JPG"},
+    { title:"树影", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/wood.png"},
+    { title:"小猫", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakimi.jpg"}
 ];
 
 const grid =document.getElementById('gallery-grid');
@@ -100,8 +104,8 @@ galleryData.forEach(item =>{
 // ./res/hakwan.png
 const artistData =[
     { name:"Alice", style:"testAlice",img:"https://images.unsplash.com/photo-1764593008232-496797f6b31d?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { name:"Jack One", style:"",img:"https://images.unsplash.com/photo-1764272579128-cae360f74b58?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { name:"Alice", style:"",img:"https://images.unsplash.com/photo-1764173039192-2bbd508d5211?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+    { name:"Jack One", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakwan.png" },
+    { name:"佳霖", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/HakJa.png" },
     { name:"Alice", style:"",img:"https://images.unsplash.com/photo-1762770640764-bfb05d380670?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
 ];
 
@@ -265,6 +269,21 @@ function finishLoading(){
         duration:1.5,
         ease:"power3.out"
     },"start+=0.5");
+
+    // tl.from('h1 span',{
+    //     y: 120,
+    //     opacity: 0,
+    //     stagger:0.15,
+    //     duration:1.8,
+    //     ease: "power4.out"
+    // },"<+=0.2");
+
+    // tl.from('.space-y-4 p',{
+    //     opacity: 0,
+    //     y: 20,
+    //     duration: 1.2,
+    //     ease: "power2.out"
+    // },"<+=0.2");
 }
 
 function PlayHeroAnimations(){
@@ -335,7 +354,7 @@ const modalCaptionBox = document.getElementById('modal-caption-box');
 function openModal(item){
     modalImg.src = item.url;
     modalTitle.innerText = item.title;
-    modalDesc.innerText = `Own ${item.artist} | 2025`
+    modalDesc.innerText = `by ${item.artist} | 2025`
 
     modal.classList.remove('modal-hidden');
 
