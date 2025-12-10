@@ -15,10 +15,18 @@
 
     <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="antialiased seletion:bg-[#ccff00] seletion:text-black bg-[#0a0a0a] text-[#f0f0f0]">
+<body class="antialiased seletion:bg-[#ccff00] seletion:text-black bg-[#0a0a0a] text-[#f0f0f0]" style="overflow: hidden;">
     <!-- 虚拟光标 -->
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
+
+    <div id="loader">
+        <div class="loader-count" id="loader-percent">0</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="loader-bar"></div>
+        </div>
+        <div class="loader-text" id="loader-status">加载资源中……</div>
+    </div>
 
     <!-- 导航栏 -->
     <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-[#ccff00]">
