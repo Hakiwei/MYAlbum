@@ -1,0 +1,170 @@
+:root{
+    --bg-color: #0a0a0a;
+    --text-color: #f0f0f0;
+    --accent-color: #ccff00;
+    --cursor-size: 20px;
+}
+
+body{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+#cursor{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    border: 1px solid var(--accent-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.3s,height 0.3s,background-color 0.3s;
+    mix-blend-mode: difference;
+}
+
+#cursor-dot{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+}
+
+body.hovering #cursor{
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    border-color: 1px dashed #ccff00;
+}
+
+.outline-text-dark{
+    color: transparent;
+    -webkit-text-stroke: 1px #333;
+    transition:all 0.3s ease;
+}
+
+.outline-text-dark:hover{
+    -webkit-text-stroke: 1px #666;
+}
+
+/* 画廊样式 */
+.gallery-item{
+    break-inside: avoid;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+}
+
+.gallery-img{
+    width: 100%;
+    height: auto;
+    display: block;
+    background-color: rgba(#333);
+    filter: grayscale(100%) contrast(120%);
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94),filter 0.5s ease;
+}
+
+.gallery-item:hover .gallery-img{
+    transform: scale(1.05);
+    filter: grayscale(0%) contrast(100%);
+}
+    /* 悬停文字展示 */
+.item-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.4s ease;
+    mix-blend-mode: multiply;
+}
+
+.gallery-item:hover .item-overlay{
+    opacity: 1;
+}
+
+/* 作者卡片 */
+.artist-card{
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+    transition: border-color 0.3s ease;
+    cursor: none;
+}
+
+.artist-card:hover{
+    border-color: var(--accent-color);
+}
+
+.artist-img{
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+.artist-card:hover .artist-img{
+    filter: grayscale(0%);
+    transform: scale(1.03);
+}
+
+.artist-info{
+    border-top: 1px solid #333;
+    transition: border-color 0.3s ease;
+}
+
+.artist-card:hover .artist-info{
+    border-color: var(--accent-color);
+}
+
+#modal{
+    background-color: rgba(10,10,10,0.98);
+    backdrop-filter: blur(10px);
+    transition: opacity 0.3s ease, visibility 0.3 ease;
+}
+
+.modal-hidden{
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+#modal-caption-box{
+    transition: transform 0.3s ease;
+    transform: translate(100%);
+}
