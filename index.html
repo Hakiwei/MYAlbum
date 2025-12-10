@@ -19,22 +19,29 @@
     <!-- 虚拟光标 -->
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
-
+    <!-- 加载页 -->
     <div id="loader">
-        <div class="loader-count" id="loader-percent">0</div>
-        <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="loader-bar"></div>
-        </div>
-        <div class="loader-text" id="loader-status">加载资源中……</div>
+         <div class="loader-curtain top"></div>
+         <div class="loader-curtain bottom"></div>
+
+         <div id="loader-text-wrapper">
+            <div class="loader-brand outline">Album.</div>
+
+            <div class="loader-brand-mask" id="loader-mask">
+                <div class="loader-brand filled">Album.</div>
+            </div>
+         </div>
+
+         <div class="loader-percent" id="loader-percent">0%</div>
     </div>
 
     <!-- 导航栏 -->
     <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-[#ccff00]">
-        <div class="text-2xl font bold tracking-tighter hoverable" data-cursor="link">Album.</div>
+        <div id="nav-logo" class="text-2xl font-black tracking-tighter hoverable opacity-0" data-cursor="link">Album.</div>
 
         <div class="hidden md:flex gap-8 text-sm font-medium tracking-widest uppercase">
             <a href="#gallery-start" class="hover:underline hoverable" data-cursor="link">展览</a>
-            <a href="#originator-section" class="hover:underline hoverable" data-cursor="link">参与者</a>
+            <a href="#originator-section" class="hover:underline hoverable" data-cursor="link">作者</a>
             <a href="#" class="hover:underline hoverable" data-cursor="link">关于</a>
         </div>
 
@@ -57,8 +64,8 @@
         <div class="z-10 text-center space-y-4">
             <p class="text-[#ccff00] text-sm uppercase tracking-[0.3em] animate-fade-in">视觉探索 / Vol.01</p>
             <h1 class="text-[12vw] leading-[0.85] font-black uppercase tracking-tighter">
-                <span class="block outline-text hoverable " data-cursor="text">探索</span>
-                <span class="block text-[#ccff00] hoverable" data-cursor="text">双色相册</span>
+                <span class="block outline-text hoverable " data-cursor="text">发现</span>
+                <span class="block text-[#ccff00] hoverable" data-cursor="text">视觉相册</span>
             </h1>
         </div>       
         <!-- 脚注 -->
@@ -88,7 +95,7 @@
         <!-- 作者卡片 -->
         <div id="originator-section" class="scroll-mt-32 mt-32">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 px-4 border-b border-[#333] pb-8">
-                <h2 class="text-4xl md:text-6xl font-bold text-white uppercase">参与者</h2>
+                <h2 class="text-4xl md:text-6xl font-bold text-white uppercase">作者</h2>
             </div>
         </div>
 

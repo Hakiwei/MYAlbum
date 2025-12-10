@@ -69,8 +69,8 @@ gsap.registerPlugin(ScrollTrigger);
 const galleryData =[
     { title:"test1", artist:"one", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/sunOff.jpg"},
     { title:"test2", artist:"two", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/buildingAndsunOff.jpg"},
-    { title:"test3", artist:"4", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/blueSky.jpg"},
     { title:"test4", artist:"5", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/seapone.jpg"},
+    { title:"test3", artist:"4", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/blueSky.jpg"},
     { title:"test5", artist:"6", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/whiteGlass.jpg"},
     { title:"test6", artist:"7", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/animial.jpg"},
     { title:"test7", artist:"8", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakimi.jpg"}
@@ -141,31 +141,35 @@ artistData.forEach((artist,index)=>{
     });
 });
 
-const loaderText = document.getElementById('loader-percent');
-const loaderBar = document.getElementById('loader-bar');
-const loaderStatus = document.getElementById('loader-status');
+const loaderPercentText = document.getElementById('loader-percent');
+const loaderMask = document.getElementById('loader-mask');
 const loaderEl = document.getElementById('loader');
+const navLogo = document.getElementById('nav-logo');
+const loaderTextWrapper = document.getElementById('loader-text-wrapper');
 
 const allImages = Array.from(document.querySelectorAll('img')).filter(img => img.id !== 'modal-img');
 const totalImages = allImages.length;
 let loadedCount = 0;
-let displayPercent = { value: 0};
+let displayPercent = {Value:0};
 
 function updateProgress(){
-    const actualPercent = Math.round((loadedCount / totalImages)* 100);
+    if(totalImages === 0) return;
+
+    const actualPercent = Math.round((loadedCount/totalImages)*100);
 
     gsap.to(displayPercent,{
-        value: actualPercent,
-        duration:0.5,
-        ease:"power1.out",
+        Value: actualPercent,
+        duration: 0.5,
+        ease: "power1.out",
         onUpdate:()=>{
-            const currentVal = Math.round(displayPercent.value);
-            loaderText.innerText = currentVal;
-            loaderBar.style.width = currentVal + "%";
+            const currentVal = Math.round(displayPercent.Value);
+            if(loaderPercentText) loaderPercentText.innerText = currentVal + "%";
+
+            if(loaderMask) loaderMask.style.height = currentVal + "%"
         },
-        onComplete: () =>{
-            if(loadedCount >= totalImages && Math.round(displayPercent.value)=== 100){
-                finishLoading();
+        onComplete:()=>{
+            if(loadedCount >= totalImages && Math.round(displayPercent.Value) === 100){
+                setTimeout(finishLoading,500);
             }
         }
     });
@@ -173,20 +177,25 @@ function updateProgress(){
 
 function onImageLoad(){
     loadedCount++;
-    if(loaderStatus){
-        loaderStatus.innerText = `加载 (${loadedCount}/${totalImages})……`
-    }
     updateProgress();
 }
 
-if(totalImages===0){
-    finishLoading();
+if(totalImages === 0){
+    let dummy = {val: 0};
+    gsap.to(dummy,{
+        val:100,
+        duration:2,
+        onUpdate:()=>{
+            if(loaderMask) loaderMask.style.height = dummy.val + "%";
+            
+            if(loaderPercentText) loaderPercentText.innerText = Math.round(dummy.val) + "%";
+        },
+        onComplete: finishLoading
+    });
 }
 else{
-    allImages.forEach(img=>{
-        if(img.complete){
-            onImageLoad.call(img);
-        }
+    allImages.forEach(img =>{
+        if(img.complete) onImageLoad();
         else{
             img.onload = onImageLoad;
             img.onerror = onImageLoad;
@@ -194,45 +203,87 @@ else{
     });
 }
 
-// setTimeout();
-
 let isFinished = false;
 function finishLoading(){
     if(isFinished) return;
     isFinished = true;
-    if(loaderStatus) loaderStatus.innerText = "加载完成";
+
+    gsap.to(loaderPercentText,{opacity:0,duration:0.3});
+
+    const stateStart = loaderTextWrapper.getBoundingClientRect();
+
+    const stateEnd = navLogo.getBoundingClientRect();
+
+    const scale = stateEnd.height / stateStart.height;
+
+    const startCenterX = stateStart.left + stateStart.width / 2;
+    const startCenterY = stateStart.top + stateStart.height / 2;
+    const endCenterX = stateEnd.left + stateEnd.width / 2;
+    const endCenterY = stateEnd.top + stateEnd.height / 2;
+
+    const deltaX = endCenterX - startCenterX;
+    const deltaY = endCenterY - startCenterY;
 
     const tl = gsap.timeline();
-    tl.to(loaderEl,{
+
+    tl.to('.loader-curtain.top',{
         yPercent: -100,
-        duration:1.2,
-        ease:"power4.inOut",
-        delay: 0.2,
+        duration: 1.6,
+        ease: "power4.inOut"
+    },"start");
+
+    tl.to('.loader-curtain.bottom',{
+        yPercent: 100,
+        duration: 1.6,
+        ease: "power4.inOut"
+    },"start");
+
+    tl.to(loaderTextWrapper,{
+        x: deltaX,
+        y: deltaY,
+        scale: scale,
+        duration:1.6,
+        ease: "power4.inOut",
         onComplete:()=>{
-            document.body.style.overflow = '';
             loaderEl.style.display = 'none';
+            navLogo.classList.remove('opacity-0');
+            document.body.style.overflow = '';
+            PlayHeroAnimations();
         }
-    });
+    },"start");
+
+    tl.from('header',{
+        scale:1.2,
+        filter:"brightness(0.2)",
+        duration:2,
+        ease:"power2.out"
+    },"start");
+
+    tl.from('#marquee-content',{
+        y: 100,
+        opacity:0,
+        duration:1.5,
+        ease:"power3.out"
+    },"start+=0.5");
 }
 
+function PlayHeroAnimations(){
+    const tl = gsap.timeline();
+    tl.from('h1 span',{
+        y:100,
+        opacity: 0,
+        stagger: 0.2,
+        duration:1.5,
+        ease:"power4.out"
+    });
 
-
-const tl = gsap.timeline();
-
-tl.from('h1 span',{
-    y: 100,
-    opacity: 0,
-    stagger: 0.2,
-    duration: 1.5,
-    ease: "power4.out"
-});
-
-tl.from('space-y-4 p',{
-    opacity:0,
-    y: -20,
-    duration:1,
-    ease: "power2.out"
-},"-=1");
+    tl.from('.space-y-4 p',{
+        opacity: 0,
+        y:-20,
+        duration: 1,
+        ease:"power2.out"
+    },"-=1");
+}
 
 // 跑马灯
 const marqueeText = "独特视角  ·  创新视野  ·  数字创作  ·  创意灵感  ·";
