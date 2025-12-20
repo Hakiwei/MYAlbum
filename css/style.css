@@ -39,7 +39,7 @@ body{
     border: 1px solid var(--accent-color);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 9999999;
     transform: translate(-50%,-50%);
     transition: width 0.3s,height 0.3s,background-color 0.3s;
     mix-blend-mode: difference;
@@ -54,7 +54,7 @@ body{
     background-color: var(--accent-color);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 9999999;
     transform: translate(-50%,-50%);
 }
 
@@ -74,6 +74,84 @@ body.hovering #cursor{
 .outline-text-dark:hover{
     -webkit-text-stroke: 1px #666;
 }
+
+/* 书签样式 */
+.bookmark-btn{
+    position: fixed;
+    right: 0;
+    z-index: 10001;
+    width: 60px;
+    height: 48px;
+    
+    background-color: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: none;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4px;
+
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    cursor:none;
+    transition: transform 0.3s ease,background-color 0.3s ease;
+    box-shadow: -4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.bookmark-btn:hover{
+    transform: translateX(-8px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.bookmark-btn i{
+    color:#f0f0f0;
+    transition: transform 0.3s ease;
+}
+
+#music-bookmark.playing{
+    background-color: rgba(204,255,0,0.6);
+    border-color: rgba(204,255,0,0.6);
+    box-shadow: -4px 4px 20px rgba(204, 255, 0, 0.4);
+}
+
+#user-bookmark{
+    top: 1.5rem;
+}
+
+#music-bookmark{
+    top: calc(1.5rem + 56px);
+    transform: translateX(120%);
+}
+
+#music-bookmark.playing i {
+    color: #000;
+    animation: pulse-icon 2s infinite;
+}
+
+@keyframes pulse-icon{
+    0% {transform: scale(1); opacity: 1;}
+    50% {transform: scale(1.1); opacity: 0.8;}
+    100% {transform: scale(1); opacity: 1;}
+}
+
+/* @media (max-width: 768px) {
+            .bookmark-btn {
+                width: 50px;
+                height: 40px;
+            }
+            #user-bookmark {
+                top: 1.5rem;
+            }
+            #music-bookmark {
+                top: calc(1.5rem + 48px);
+            }
+        } */
 
 /* 画廊样式 */
 .gallery-item{
@@ -152,6 +230,7 @@ body.hovering #cursor{
     border-color: var(--accent-color);
 }
 
+/* 大图模态框样式 */
 #modal{
     background-color: rgba(10,10,10,0.98);
     backdrop-filter: blur(10px);
@@ -169,6 +248,8 @@ body.hovering #cursor{
     transform: translate(100%);
 }
 
+
+/* 加载页样式 */
 #loader{
     position: fixed;
     top: 0;

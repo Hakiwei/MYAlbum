@@ -27,6 +27,8 @@ function animateCursor(){
 animateCursor();
 
 
+
+
 // 鼠标悬停在hoverable元素上时改变样式
 document.addEventListener('mouseover', (e) => {
     const target= e.target.closest('.hoverable');
@@ -62,9 +64,88 @@ document.addEventListener('mouseout', (e) => {
     }
 });
 
-// GSAP标题浮出动画效果
+// 注册插件
 gsap.registerPlugin(ScrollTrigger);
 
+// 音乐控制逻辑
+const musicBookmark = document.getElementById('music-bookmark');
+const bgMusic = document.getElementById('bg-music');
+let isPlaying = false;
+let hasAutoPlayed = false;
+
+bgMusic.volume = 0.5;
+
+function playMusic(){
+    const playPromise = bgMusic.play();
+
+    if(playPromise !== undefined){
+        playPromise.then(_=>{
+            isPlaying = true;
+            updateMusicIcon();
+        })
+        .catch(error =>{
+            console.log("被拦截");
+            isPlaying = false;
+            updateMusicIcon();
+        });
+    }
+}
+
+function pauseMusic(){
+    bgMusic.pause();
+    isPlaying = false;
+    updateMusicIcon();
+}
+
+function updateMusicIcon(){
+    if(isPlaying){
+        musicBookmark.innerHTML = '<i data-lucide="bar-chart-2" class="w-6 h-6"></i>';
+        musicBookmark.classList.add('playing');
+    }else{
+        musicBookmark.innerHTML = '<i data-lucide="music" class="w-6 h-6"></i>';
+        musicBookmark.classList.remove('playing');
+    }
+
+    if(typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+musicBookmark.addEventListener('click',()=>{
+    if(isPlaying){
+        pauseMusic();
+    }else{
+        playMusic();
+    }
+});
+
+function unlockAudio(){
+    document.removeEventListener('click',unlockAudio);
+    document.removeEventListener('touchstart',unlockAudio);
+}
+
+document.addEventListener('click',unlockAudio);
+document.addEventListener('touchstart',unlockAudio);
+
+if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
+    ScrollTrigger.create({
+        trigger: "#gallery-start",
+        start: "top 60%",
+        onEnter: ()=>{
+            gsap.to(musicBookmark,{
+                x:0,
+                duration:0.8,
+                ease:"power3.out"
+            });
+
+            if(!hasAutoPlayed && !isPlaying){
+                playMusic();
+                hasAutoPlayed = true;
+            }
+        },
+        
+    });
+}
+
+// GSAP标题浮出动画效果
 // 画廊内容生成
 const galleryData =[
     { title:"小艇", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/sunOff.jpg"},
@@ -88,7 +169,7 @@ galleryData.forEach(item =>{
     div.setAttribute('data-cursor','view');
 
     div.innerHTML = `
-        <img src="${item.url}" alt="${item.title}" class="gallery-img" loading="lazy">
+        <img src="${item.url}" alt="${item.title}" class="gallery-img">
         <div class="item-overlay z-20">
             <span class="text-black font-bold text-2xl uppercase tracking-widest">${item.title}</span>
             <span class="text-black text-xs uppercase tracking-widest mt-2">by ${item.artist}</span>
@@ -101,7 +182,6 @@ galleryData.forEach(item =>{
 });
 
 // 生成卡片
-// ./res/hakwan.png
 const artistData =[
     { name:"Alice", style:"testAlice",img:"https://images.unsplash.com/photo-1764593008232-496797f6b31d?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
     { name:"Jack One", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakwan.png" },
@@ -270,20 +350,6 @@ function finishLoading(){
         ease:"power3.out"
     },"start+=0.5");
 
-    // tl.from('h1 span',{
-    //     y: 120,
-    //     opacity: 0,
-    //     stagger:0.15,
-    //     duration:1.8,
-    //     ease: "power4.out"
-    // },"<+=0.2");
-
-    // tl.from('.space-y-4 p',{
-    //     opacity: 0,
-    //     y: 20,
-    //     duration: 1.2,
-    //     ease: "power2.out"
-    // },"<+=0.2");
 }
 
 function PlayHeroAnimations(){

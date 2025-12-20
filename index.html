@@ -16,6 +16,20 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="antialiased seletion:bg-[#ccff00] seletion:text-black bg-[#0a0a0a] text-[#f0f0f0]" style="overflow: hidden;">
+    <!-- 背景音乐-->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/Esperanza-Hermanos Gutierrez.mp3" type="audio/mpeg">
+        您的浏览器不支持 audio 元素。
+    </audio>
+    <!-- 书签 -->
+    <div id="user-bookmark" class="bookmark-btn hoverable" data-cursor="link">
+        <i data-lucide="circle-user" class="w-6 h-6"></i>
+    </div>
+
+    <div id="music-bookmark" class="bookmark-btn hoverable" data-cursor="link">
+        <i data-lucide="music" class="w-6 h-6"></i>
+    </div>    
+    
     <!-- 虚拟光标 -->
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
@@ -36,18 +50,14 @@
     </div>
 
     <!-- 导航栏 -->
-    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-[#ccff00]">
+    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-[#ccff00] pointer-events-none md:pointer-events-auto">
         <div id="nav-logo" class="text-2xl font-black tracking-tighter hoverable opacity-0" data-cursor="link">Album.</div>
 
-        <div class="hidden md:flex gap-8 text-sm font-medium tracking-widest uppercase">
+        <div class="hidden md:flex gap-8 text-sm font-medium tracking-widest uppercase absolute left-1/2 -translate-x-1/2 pointer-events-auto">
+            <a href="#" class="hover:underline hoverable" data-cursor="link">首页</a>
             <a href="#gallery-start" class="hover:underline hoverable" data-cursor="link">展览</a>
             <a href="#originator-section" class="hover:underline hoverable" data-cursor="link">作者</a>
-            <a href="#" class="hover:underline hoverable" data-cursor="link">关于</a>
         </div>
-
-        <button class="hoverable border border-[#ccff00] px-4 py-2 rounded-full text-xs uppercase tracking-widest hover:bg-[#ccff00] hover:text-black transition-colors" data-cursor="link">
-            加入我们
-        </button>
     </nav>
 
     <header class="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
@@ -116,8 +126,8 @@
     </footer>
     
     <!-- 模态框 -->
-    <div id="modal" class="fixed inset-0 z-[100] modal-hidden flex items-center justify-center p-4 md:p-12">
-        <button id="close-modal" class="absolute top-8 right-8 text-white hover:text-[#ccff00] z-[101] hoverable" data-cursor="link">
+    <div id="modal" class="fixed inset-0 z-[10002] modal-hidden flex items-center justify-center p-4 md:p-12">
+        <button id="close-modal" class="absolute top-8 right-8 text-white hover:text-[#ccff00] z-[10003] hoverable" data-cursor="link">
             <i data-lucide="X" class="w-10 h-10"></i>
         </button>
 
