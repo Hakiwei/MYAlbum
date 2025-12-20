@@ -23,13 +23,54 @@
     </audio>
     <!-- 书签 -->
     <div id="user-bookmark" class="bookmark-btn hoverable" data-cursor="link">
-        <i data-lucide="circle-user" class="w-6 h-6"></i>
+        <i data-lucide="file-plus-corner" class="w-6 h-6"></i>
     </div>
 
     <div id="music-bookmark" class="bookmark-btn hoverable" data-cursor="link">
         <i data-lucide="music" class="w-6 h-6"></i>
     </div>    
     
+    <!-- 上传侧边栏 -->
+    <div id="upload-sidebar" class="fixed top-0 right-0 w-full md:w-[450px] h-full bg-[#0a0a0a]/95 backdrop-blur-xl border-l border-[#333] z-[10002] transform translate-x-full transition-transform duration-500 cubic-bezier(0.22, 1, 0.36, 1) flex flex-col p-8 md:p-12 shadow-2xl">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="text-3xl font-bold text-white tracking-tighter">上传作品</h2>
+            <button id="close-sidebar" class="text-gray-500 hover:text-[#ccff00] transition-colors hoverable" data-cursor="link">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 space-y-8">
+            <!-- Image Upload Area -->
+            <div class="group relative w-full aspect-[4/3] border-2 border-dashed border-[#333] hover:border-[#ccff00] rounded-sm bg-[#111] transition-colors flex flex-col justify-center items-center cursor-pointer hoverable overflow-hidden" id="drop-area" data-cursor="link">
+                <input type="file" id="file-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                
+                <div id="upload-placeholder" class="flex flex-col items-center pointer-events-none transition-opacity duration-300">
+                    <i data-lucide="upload" class="w-8 h-8 text-gray-500 group-hover:text-[#ccff00] mb-4 transition-colors"></i>
+                    <span class="text-xs text-gray-400 uppercase tracking-widest group-hover:text-white">点击上传图片</span>
+                </div>
+                
+                <img id="preview-image" src="" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 pointer-events-none">
+            </div>
+
+            <!-- Inputs -->
+            <div class="space-y-6">
+                <div class="group">
+                    <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2 group-focus-within:text-[#ccff00] transition-colors">作品名称</label>
+                    <input type="text" id="work-title" class="w-full bg-transparent border-b border-[#333] py-2 text-white outline-none focus:border-[#ccff00] transition-colors font-bold text-xl placeholder-gray-800" placeholder="UNTITLED">
+                </div>
+                
+                <div class="group">
+                    <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2 group-focus-within:text-[#ccff00] transition-colors">创作者</label>
+                    <input type="text" id="work-artist" class="w-full bg-transparent border-b border-[#333] py-2 text-white outline-none focus:border-[#ccff00] transition-colors font-medium placeholder-gray-800" placeholder="ANONYMOUS">
+                </div>
+            </div>
+        </div>
+
+        <button id="publish-btn" class="w-full bg-white text-black font-bold py-4 mt-8 hover:bg-[#ccff00] transition-colors uppercase tracking-widest hoverable" data-cursor="link">
+            发布到画廊
+        </button>
+    </div>
+
     <!-- 虚拟光标 -->
     <div id="cursor"></div>
     <div id="cursor-dot"></div>

@@ -452,6 +452,116 @@ setTimeout(()=>{
 });
 
 
+const userBookmark = document.getElementById('user-bookmark');
+const uploadSidebar = document.getElementById('upload-sidebar');
+const closeSidebarBtn = document.getElementById('close-sidebar');
+
+// 侧边栏开关
+function toggleSidebar(show) {
+    if (show) {
+        uploadSidebar.classList.remove('translate-x-full');
+    } else {
+        uploadSidebar.classList.add('translate-x-full');
+    }
+}
+
+userBookmark.addEventListener('click', () => toggleSidebar(true));
+closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+
+// 文件预览逻辑
+const fileInput = document.getElementById('file-input');
+const previewImage = document.getElementById('preview-image');
+const uploadPlaceholder = document.getElementById('upload-placeholder');
+const publishBtn = document.getElementById('publish-btn');
+const workTitleInput = document.getElementById('work-title');
+const workArtistInput = document.getElementById('work-artist');
+
+fileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+            previewImage.src = evt.target.result;
+            previewImage.classList.remove('opacity-0');
+            uploadPlaceholder.classList.add('opacity-0');
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// 发布逻辑
+publishBtn.addEventListener('click', () => {
+    const file = fileInput.files[0];
+
+    // 简单校验
+    if (!file) {
+        // 简单的晃动提示
+        gsap.to('#drop-area', { x: [-5, 5, -5, 5, 0], duration: 0.3 });
+        return;
+    }
+
+    const title = workTitleInput.value.trim() || 'UNTITLED';
+    const artist = workArtistInput.value.trim() || 'ANONYMOUS';
+
+    // 读取文件并添加到画廊
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+        const imgUrl = evt.target.result;
+
+        // 创建DOM
+        const newItem = document.createElement('div');
+        newItem.className = 'gallery-item hoverable opacity-0 translate-y-12'; // 初始隐藏状态
+        newItem.setAttribute('data-cursor', 'view');
+
+        newItem.innerHTML = `
+                    <img src="${imgUrl}" alt="${title}" class="gallery-img">
+                    <div class="item-overlay z-20">
+                        <span class="text-black font-bold text-2xl uppercase tracking-widest">${title}</span>
+                        <span class="text-black text-xs uppercase tracking-widest mt-2">by ${artist}</span>
+                    </div>
+                `;
+
+        // 绑定点击查看大图事件
+        newItem.addEventListener('click', () => openModal({
+            url: imgUrl,
+            title: title,
+            artist: artist
+        }));
+
+        // 插入到画廊的最前面
+        const galleryGrid = document.getElementById('gallery-grid');
+        galleryGrid.prepend(newItem);
+
+        // 动画进场
+        gsap.to(newItem, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        // 关闭侧边栏并重置表单
+        toggleSidebar(false);
+        setTimeout(() => {
+            fileInput.value = '';
+            workTitleInput.value = '';
+            workArtistInput.value = '';
+            previewImage.src = '';
+            previewImage.classList.add('opacity-0');
+            uploadPlaceholder.classList.remove('opacity-0');
+        }, 500);
+
+        // 滚动到画廊位置
+        document.getElementById('gallery-start').scrollIntoView({ behavior: 'smooth' });
+    }
+    reader.readAsDataURL(file);
+});
+
+
+setTimeout(() => {
+    lucide.createIcons();
+});
+
 //     card.innerHTML = `
 //         <div class="relative overflow-hidden">
 //             <img src="${artist.img}" alt="${artist.name}" class="artist-img">
