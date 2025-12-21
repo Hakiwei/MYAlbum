@@ -148,17 +148,16 @@ if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
 // GSAP标题浮出动画效果
 // 画廊内容生成
 const galleryData =[
-    { title:"小艇", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/sunOff.jpg"},
-    { title:"城市", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/buildingAndsunOff.jpg"},
-    { title:"海岸", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/seapone.jpg"},
-    { title:"蓝天", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/blueSky.jpg"},
-    { title:"灌木", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/grass.JPG"},
-    { title:"海水", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/whiteGlass.jpg"},
-    { title:"森林", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/forest.png"},
-    { title:"蜥蜴", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/animial.jpg"},
-    { title:"行人", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/People.JPG"},
-    { title:"树影", artist:"佳霖", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/wood.png"},
-    { title:"小猫", artist:"境", url:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakimi.jpg"}
+    { title:"小艇", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/sunOff.jpg"},
+    { title:"城市", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/buildingAndsunOff.jpg"},
+    { title:"海岸", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/seapone.jpg"},
+    { title:"蓝天", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/blueSky.jpg"},
+    { title:"灌木", artist:"佳霖", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/grass.JPG"},
+    { title:"海水", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/whiteGlass.jpg"},
+    { title:"森林", artist:"佳霖", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/forest.png"},
+    { title:"蜥蜴", artist:"境", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/animial.jpg"},
+    { title:"行人", artist:"佳霖", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/People.JPG"},
+    { title:"树影", artist:"佳霖", url:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/wood.png"}
 ];
 
 const grid =document.getElementById('gallery-grid');
@@ -183,10 +182,10 @@ galleryData.forEach(item =>{
 
 // 生成卡片
 const artistData =[
-    { name:"Alice", style:"testAlice",img:"https://images.unsplash.com/photo-1764593008232-496797f6b31d?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { name:"Jack One", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakwan.png" },
+    { name:"合伙人", style:"",img:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/allpartner.jpg" },
+    { name:"鸟木", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakwan.png" },
     { name:"佳霖", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/HakJa.png" },
-    { name:"Alice", style:"",img:"https://images.unsplash.com/photo-1762770640764-bfb05d380670?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    { name:"函正", style:"",img:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/sadestPeople.jpg" }
 ];
 
 const artistGrid = document.getElementById('artist-grid');
