@@ -183,7 +183,7 @@ galleryData.forEach(item =>{
 // 生成卡片
 const artistData =[
     { name:"合伙人", style:"",img:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/allpartner.jpg" },
-    { name:"鸟木", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/hakwan.png" },
+    { name:"欧强", style:"",img:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/ojq.png" },
     { name:"佳霖", style:"",img:"https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/HakJa.png" },
     { name:"函正", style:"",img:"https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/sadestPeople.jpg" }
 ];
