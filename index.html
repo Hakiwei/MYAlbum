@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="antialiased seletion:bg-[#ccff00] seletion:text-black bg-[#0a0a0a] text-[#f0f0f0]" style="overflow: hidden;">
@@ -21,54 +23,162 @@
         <source src="https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/musicbucket/Esperanza-Hermanos%20Gutierrez.mp3" type="audio/mpeg">
         您的浏览器不支持 audio 元素。
     </audio>
-    <!-- 书签 -->
+    <!-- 用户中心书签 -->
     <div id="user-bookmark" class="bookmark-btn hoverable" data-cursor="link">
         <i data-lucide="circle-user" class="w-6 h-6"></i>
     </div>
-
+    <!-- 音乐控制书签 -->
     <div id="music-bookmark" class="bookmark-btn hoverable" data-cursor="link">
         <i data-lucide="music" class="w-6 h-6"></i>
     </div>    
+    <!-- 上传书签 -->
+    <div id="upload-bookmark" class="bookmark-btn hoverable" data-cursor="link">
+        <i data-lucide="cloud-upload" class="w-6 h-6"></i>
+    </div>
     
-    <!-- 上传侧边栏 -->
-    <div id="upload-sidebar" class="fixed top-0 right-0 w-full md:w-[450px] h-full bg-[#0a0a0a]/95 backdrop-blur-xl border-l border-[#333] z-[10002] transform translate-x-full transition-transform duration-500 cubic-bezier(0.22, 1, 0.36, 1) flex flex-col p-8 md:p-12 shadow-2xl">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl font-bold text-white tracking-tighter">上传作品</h2>
-            <button id="close-sidebar" class="text-gray-500 hover:text-[#ccff00] transition-colors hoverable" data-cursor="link">
-                <i data-lucide="x" class="w-8 h-8"></i>
+    <!-- 用户全屏中心 (原侧边栏) -->
+    <div id="user-home" class="fixed inset-0 w-full h-full bg-[#0a0a0a] z-[10002] transform translate-x-full transition-transform duration-500 cubic-bezier(0.22,1,0.36,1) flex flex-col overflow-y-auto">
+        <div class="w-full mx-auto flex flex-col p-8 md:p-12 min-h-full max-w-[1200px]">
+            <!-- 用户页标题 -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="sidebar-title" class="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">用户中心</h2>
+                <button id="close-sidebar" class="text-gray-500 hover:text-[#ccff00] transition-colors hoverable p-2" data-cursor="link">
+                    <i data-lucide="X" class="w-10 h-10"></i>
+                </button>
+            </div>
+            <!-- 登录注册区域 -->
+            <div id="auth-container" class="flex-1 flex flex-col justify-center w-full transition-opacity duration-300">
+                <div id="login-form-content" class="max-w-lg mx-auto w-full">
+                    <div class="mb-12">
+                        <h3 id="auth-mode-tile" class="text-4xl font-bold text-white mb-4 tracking-tighter">欢迎回来</h3>
+                        <p class="text-gray-400 text-lg">请登录以访问您的个人空间/分享您的图片</p>
+                    </div>
+                    <!-- 用户输入 -->
+                    <div class="space-y-8">
+                        <div class="group">
+                            <label class="block text-sm text-gray-500 uppercase tracking-widest mb-3 group-focus-within:text-[#ccff00] transition-colors">电子邮箱</label>
+                            <input type="email" id="auth-email" class="w-full bg-transparent border-b-2 border-[#333] py-4 text-white text-xl outline-none focus-border-[#ccff00] transition-colors font-medium placeholder-gray-700" placeholder="your@email.com">
+                        </div>
+
+                        <div class="group">
+                            <label class="block text-sm text-gray-500 uppercase tracking-widest mb-3 group-focus-within:text-[#ccff00] transition-colors">密码</label>
+                            <input type="password" id="auth-password" class="w-full bg-transparent border-b-2 border-[#333] py-4 text-white text-xl outline-none focus-border-[#ccff00] transition-colors font-medium placeholder-gray-700" placeholder="········">
+                        </div>
+                    </div>
+
+                    <div id="auth-error-msg" class="text-red-500 text-sm mt-6 hidden">错误信息</div>
+                    <!-- 登录按钮 -->
+                    <button id="auth-action-btn" class="w-full bg-white text-black font-bold text-xl py-5 mt-12 hover:bg-[#ccff00] transition-colors uppercase tracking-widest hoverable" data-cursor="link">
+                        <span id="auth-btn-text">登录</span>
+                        <span id="auth-loading" class="hidden">
+                            <i data-lucide="loader-2" class="w-7 h-8 animate-soin mx-auto"></i>
+                        </span>
+
+                    </button>
+                    <!-- 切换注册/登录状按钮 -->
+                    <div class="mt-8 text-center text-sm text-gray-500 uppercase tracking-widest">
+                        <span id="auth-switch-text">还没有账号?</span>
+                        <button id="auth-switch-btn" class="text-[#ccff00] hover:underline ml-2 hoverable font-bold" data-cursor="link">去注册</button>
+                    </div>
+                </div>
+                <!-- 用户个人信息区域，登录后出现 -->
+                <div id="user-profile-content" class="hidden w-full flex-col">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-6">
+                        <div class="flex items-center gap-6">
+                            <!-- 用户头像 -->
+                            <div class="relative group cursor-pointer hoverable w-20 h-20 md:w-24 md:h-24 flex-shrink-0" id="avatar-container" data-cursor="link">
+                                <img id="user-avatar" src="./res/tempUserAvatar.jpg" class="w-full h-full rounded-full object-cover border-2 border-[#333] group-hover:border-[#ccff00] transition-colors">
+                            
+                                <div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i data-lucide="camera" class="w-6 h-6 text-white"></i>
+                                </div>
+
+                                <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                            </div>
+                            <!-- 用户昵称 -->
+                            <div class="flex  flex-col">
+
+                                <div class="flex items-center gap-3 mb-1 group">
+                                    <h3 id="user-nickname-display" class="text-2xl md:text-4xl font-bold text-white tracking-tighter cursor-pointer hover:text-[#ccff00] transition-colors hoverable" data-cursor="text" title="点击编辑昵称">未命名用户</h3>
+
+                                    <input type="text" id="user-nickname-input" class="hidden bg-transparent border-b-2 border-[#ccff00] text-2xl md:text-4xl font-bold font-bold text-[#ccff00] outline-none w-48 md:w-64" value="未命名用户">
+                                    <i data-lucide="edit-2" class="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors opacity-0 group-hover:opacity-100"></i>
+                                </div>
+
+                            </div>
+                            <!-- 用户邮箱显示后期替换成uid -->
+                            <p class="text-sm text-gray-500 font-mono" id="user-email-display">user@example.com</p>
+
+                        </div>
+                    </div>
+                    <!-- 登出按钮 -->
+                    <button id="logout-btn" class="text-xs uppercase tracking-widest text-gray-500 hover:text-white transition-colors hoverable px-4 py-2 border border-[#333] hover:border-white rounded-full" data-cursor="link">退出登录</button>
+                    <!-- 分割线与标签 -->
+                    <div class="relative flex items-center justify-center w-full my-8">
+
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-[#333]"></div>
+
+                        </div>
+                
+                        <div class="relative bg-[#0a0a0a] px-6 flex gap-8">
+                            <button id="tab-works" class="text-sm font-bold uppercase tracking-widest hover:text-[#ccff00] transition-colors tab-active hoverable" data-cursor="link">我的作品</button>
+                            <!-- 可拓展更多个人页功能 -->
+                        </div>
+                    </div>
+                    <!-- 用户个人画廊 -->
+                    <div id="user-gallery-section" class="w-full">
+                        <div id="user-gallery-grid" class="columns-1 md:columns-2 gap-6 space-y-6 w-full pb-24">
+                            <!-- 代码生成 -->
+                        </div>
+
+                        <div id="empty-state" class="text-center py-24 text-gray-600 hidden">
+                            <div class="w-20 h-20 rounded-full bg-[#111] flex items-center justify-center mx-auto mb-4 border border-[#333]">
+
+                                <i data-lucide="image" class="w-8 h-8 opacity-50"></i>
+                            </div>
+
+                            <p class="uppercase tracking-widest text-xs">暂无上传作品</p>
+                            <p class="text-xs text-gray-700 mt-2">点击左侧云朵图标上传</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+           
+    
+    <div id="upload-modal" class="fixed inset-0 z-[10005] modal-hidden flex items-center justify-center p-4">
+        
+        <div class="bg-[#111] border border-[#333] p-8 w-full max-w-lg relative">
+            
+            <button id="close-upload-modal" class="absolute top-4 right-4 text-gray-500 hover:text-[#ccff00] transition-colors hoverable" data-cursor="link">
+                <i data-lucide="X" class="w-6 h-6"></i>
+
             </button>
-        </div>
 
-        <div class="flex-1 space-y-8">
-            <!-- Image Upload Area -->
-            <div class="group relative w-full aspect-[4/3] border-2 border-dashed border-[#333] hover:border-[#ccff00] rounded-sm bg-[#111] transition-colors flex flex-col justify-center items-center cursor-pointer hoverable overflow-hidden" id="drop-area" data-cursor="link">
-                <input type="file" id="file-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+            <h3 class="text-2xl font-bold text-white mb-6 uppercase tracking-tighter">上传作品</h3>
+            
+            <div class="upload-zone w-full h-64 flex flex-col justify-center items-center cursor-pointer hoverable mb-6 relative overflow-hidden" id="drop-zone" data-cursor="link">
                 
-                <div id="upload-placeholder" class="flex flex-col items-center pointer-events-none transition-opacity duration-300">
-                    <i data-lucide="upload" class="w-8 h-8 text-gray-500 group-hover:text-[#ccff00] mb-4 transition-colors"></i>
-                    <span class="text-xs text-gray-400 uppercase tracking-widest group-hover:text-white">点击上传图片</span>
+                <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+                
+                <div id="upload-placeholder" class="text-center pointer-events-none">
+                    <i data-lucide="image-plus" class="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
+                    <p class="text-gray-400">点击图片拖拽到此处</p>
+
                 </div>
-                
-                <img id="preview-image" src="" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 pointer-events-none">
+
+                <img id="preview-image" src="" class="absolute inset-0 w-full h-full object-cover hidden pointer-events-none">
             </div>
 
-            <!-- Inputs -->
-            <div class="space-y-6">
-                <div class="group">
-                    <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2 group-focus-within:text-[#ccff00] transition-colors">作品名称</label>
-                    <input type="text" id="work-title" class="w-full bg-transparent border-b border-[#333] py-2 text-white outline-none focus:border-[#ccff00] transition-colors font-bold text-xl placeholder-gray-800" placeholder="UNTITLED">
-                </div>
-                
-                <div class="group">
-                    <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2 group-focus-within:text-[#ccff00] transition-colors">创作者</label>
-                    <input type="text" id="work-artist" class="w-full bg-transparent border-b border-[#333] py-2 text-white outline-none focus:border-[#ccff00] transition-colors font-medium placeholder-gray-800" placeholder="ANONYMOUS">
-                </div>
+            <div class="space-y-4">
+
+                <input type="text" id="upload-title" class="w-full bg-transparent border-b border-[#333] py-2 text-white outline-none focus:border-[#ccff00] transition-colors placeholder-gray-700" placeholder="作品标题">
+
+                <button id="confirm-upload-btn" class="w-full bg-white text-black font-bold py-3 hover:bg-[#ccff00] transition-colors uppercase tracking-widest hoverable" data-cursor="link">确认发布</button>
             </div>
         </div>
-
-        <button id="publish-btn" class="w-full bg-white text-black font-bold py-4 mt-8 hover:bg-[#ccff00] transition-colors uppercase tracking-widest hoverable" data-cursor="link">
-            发布到画廊
-        </button>
     </div>
 
     <!-- 虚拟光标 -->
@@ -183,6 +293,7 @@
         </div>
     </div>
     <script src="./js/script.js"></script>
+    <script src="./js/auth.js"></script>
 </body>
 </html>
 
