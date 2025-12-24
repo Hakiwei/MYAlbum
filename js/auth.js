@@ -143,7 +143,7 @@ fileInput.addEventListener('change',function(e){
     }
 });
 
-confirmUploadBtn.addEventListener('click',()=>{
+confirmUploadBtn.addEventListener('click',async ()=>{
     const title = uploadTitleInput.value || '未命名作品';
 
     const imgSrc = previewImage.src;
@@ -159,6 +159,24 @@ confirmUploadBtn.addEventListener('click',()=>{
         url:imgSrc
     };
 
+
+    const formData = new FormData();
+
+    formData.append('file',fileInput.files[0]);
+
+    const response = await fetch('/upload',{
+        method: 'POST',
+        body: formData
+    });
+
+    if(response.status === 200){
+        const msg = await response.text();
+        alert('上传成功' + msg);
+    }else{
+        const msg = await response.text();
+        alert('上传失败' + msg);
+    }
+
     userGalleryItems.unshift(newItem);
 
     renderUserGallery();
@@ -169,6 +187,8 @@ confirmUploadBtn.addEventListener('click',()=>{
 
     // alert('发布成功');
 });
+
+
 
 avatarContainer.addEventListener('click',()=>{
     avatarInput.click();

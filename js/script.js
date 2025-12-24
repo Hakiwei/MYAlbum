@@ -184,7 +184,7 @@ galleryData.forEach(item => {
 const artistData = [
     { name: "境", style: "", img: "https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/haki.jpg" },
     { name: "欧强", style: "", img: "https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/ojq.png" },
-    { name: "佳霖", style: "", img: "https://cdn.jsdelivr.net/gh/Hakiwei/myAssets/HakJa.png" },
+    { name: "佳霖", style: "", img: "https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/HakJa.png" },
     { name: "函正", style: "", img: "https://pub-af017771c2664a4390128eab2bdd6fee.r2.dev/photobucket/sadestPeople.jpg" }
 ];
 
