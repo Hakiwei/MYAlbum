@@ -102,10 +102,30 @@ actionBtn.addEventListener('click', async ()=>{
         }else{
             // alert('注册成功');
 
-            if(data.user){
+            // if(data.user){
+            //     updateUserStatus(data.user);
+            // }
+
+            if(data.user && !data.session){
+                alert(`注册成功\n\n验证邮件已发送至${email},请点击邮件中的链接完成激活。`);
+            }else if(data.user && data.session){
                 updateUserStatus(data.user);
             }
         }
+    }
+});
+
+supabaseClient.auth.onAuthStateChange((event, session)=>{
+    console.log("当前认证事件:", event);
+
+    if(event === 'SIGNED_IN' && session){
+        console.log("用户已登录:", session.user);
+
+        updateUserStatus(session.user);
+
+        window.history.replaceState(null,null,window.location.pathname);
+    }else if(event === 'SIGNED_OUT'){
+        console.log("用户已登出");
     }
 });
 
