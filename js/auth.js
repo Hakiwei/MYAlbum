@@ -195,8 +195,30 @@ confirmUploadBtn.addEventListener('click',async ()=>{
     });
 
     if(response.status === 200){
-        const msg = await response.text();
-        alert('上传成功' + msg);
+        // const msg = await response.text();
+        // alert('上传成功' + msg);
+
+        const imageUrl = await response.text();
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if(user){
+            const { error: dbError} = await supabaseClient
+                .from('user_gallery')
+                .insert({
+                    title: title,
+                    artist: currentUserNickname,
+                    url: imageUrl,
+                    user_id: user.id
+                });
+
+            if(dbError){
+                console.error('数据库保存失败:',dbError);
+                alert('图片上传成功，但保存信息失败');
+            }else{
+                console.log('数据库保存成功!');
+                renderUserGallery();
+            }
+        }
     }else{
         const msg = await response.text();
         alert('上传失败' + msg);
@@ -370,17 +392,23 @@ async function updateUserStatus(user){
     lucide.createIcons();
 }
 
-function renderUserGallery(){
+async function renderUserGallery(){
     const userGalleryGrid = document.getElementById('user-gallery-grid');
     const emptyState = document.getElementById('empty-state');
 
-    if(!userGalleryGrid) return;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if(!user) return;
 
-    if(!currentUserNickname){
-        console.warn()
+    const { data, error } = await supabaseClient
+        .from('user_gallery')
+        .select('*')
+        .eq('user_id',user.id);
+    if(error){
+        console.error('加载画廊失败:',error);
+        return;
     }
-
-    grid.innerHTML = '';
+    userGalleryItems = data || [];
+    userGalleryGrid.innerHTML = '';
 
     if(userGalleryItems.length === 0){
         emptyState.classList.remove('hidden');
@@ -401,7 +429,7 @@ function renderUserGallery(){
 
             div.addEventListener('click',()=> openModal(item));
 
-            grid.appendChild(div);
+            userGalleryGrid.appendChild(div);
         });
     }
 }
