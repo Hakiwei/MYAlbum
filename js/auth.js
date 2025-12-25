@@ -83,7 +83,12 @@ actionBtn.addEventListener('click', async ()=>{
     }else{
         result = await supabaseClient.auth.signUp({
             email: email,
-            password: password
+            password: password,
+            options:{
+                data:{
+                    display_name: nickname
+                }
+            }
         });
     }
 
@@ -233,21 +238,54 @@ userNicknameDisplay.addEventListener('click',()=>{
     userNicknameInput.focus();
 });
 
-function saveNickname(){
+async function saveNickname(){
     const newName = userNicknameInput.value.trim();
 
-    if(newName){
-        currentUserNickname = newName;
-        userNicknameDisplay.innerText = newName;
-    }else{
+    if(!newName || newName === currentUserNickname){
         userNicknameInput.value = currentUserNickname;
+        return;
     }
 
-    userNicknameInput.addEventListener('blur',saveNickname);
-    userNicknameInput.addEventListener('keypress',(e)=>{
-        if(e.key === 'Enter') saveNickname();
-    });
+    const oldName = currentUserNickname;
+    currentUserNickname = newName;
+    userNicknameDisplay.innerText = newName;
+
+    try {
+        const { data:{ user } } = await supabaseClient.auth.getUser();
+
+        const userId = user.id;
+        
+        const { error: authError } = await supabaseClient.auth.updateUser({
+            data: { display_name: newName }
+        });
+        if(authError) throw authError;
+
+        const { error } = await supabaseClient
+            .from('profiles')
+            .update({username: newName})
+            .eq('id',userId);
+        if(error) throw error;
+        console.log("昵称已同步:",newName);
+    } catch (error) {
+        console.error("保存失败:",error);
+        alert("保存失败");
+
+        currentUserNickname = oldName;
+        userNicknameDisplay.innerText = oldName;
+    }
+
+    
 }
+
+userNicknameInput.addEventListener('blur',saveNickname);
+userNicknameInput.addEventListener('keypress',(e)=>{
+    if(e.key === 'Enter') {
+        e.preventDefault();
+        userNicknameInput.blur();
+    }
+});
+
+
 
 function resetUploadForm(){
     fileInput.value = '';
@@ -286,12 +324,39 @@ function setLoading(isLoading){
     }
 }
 
-function updateUserStatus(user){
+async function updateUserStatus(user){
+    const metaName = user.user_metadata?.display_name;
+    const emailName = user.email?.split('@')[0];
+    const finalName = metaName || emailName || '未命名用户';
+
+    currentUserNickname = finalName;
+
+    if(userNicknameDisplay) userNicknameDisplay.innerText = finalName;
+    if(userNicknameInput) userNicknameInput.value = finalName;
+
     loginFormContent.classList.add('hidden');
     userProfileContent.classList.remove('hidden');
     userProfileContent.classList.add('flex');
 
-    userEmailDisplay.innerText = user.email;
+    // userEmailDisplay.innerText = user.email;
+    userEmailDisplay.innerText = "UID: Loading……";
+    
+    try {
+        const {data: profile, error} = await supabaseClient
+            .from('profiles')
+            .select('friend_id')
+            .eq('id',user.id)
+            .single();
+
+        if(profile && profile.friend_id){
+            userEmailDisplay.innerText = `UID: ${profile.friend_id}`;
+        }else{
+            userEmailDisplay.innerText = user.email;
+        }
+    } catch (err) {
+        console.error("UID加载失败:",err);
+        userEmailDisplay.innerText = user.email;
+    }
 
     gsap.to(uploadBookmark,{
         x:0,
@@ -306,10 +371,14 @@ function updateUserStatus(user){
 }
 
 function renderUserGallery(){
-    const grid = document.getElementById('user-gallery-grid');
+    const userGalleryGrid = document.getElementById('user-gallery-grid');
     const emptyState = document.getElementById('empty-state');
 
-    if(!grid) return;
+    if(!userGalleryGrid) return;
+
+    if(!currentUserNickname){
+        console.warn()
+    }
 
     grid.innerHTML = '';
 
